@@ -31,3 +31,15 @@ This script is intentionally read-only and safe to re-run.
 ```powershell
 PowerShell -NoProfile -ExecutionPolicy Bypass -File "C:\HaleDistrict\Scripts\HD1_HealthCheck_v1.0.ps1"
 ```
+
+
+---
+
+## Quick DC Verification Command
+
+On DC01, to confirm the most recent environment capture:
+
+```powershell
+Get-ChildItem C:\HaleDistrict\Logs\HD1_Describe_Environment |
+Sort-Object LastWriteTime -Descending |
+Select-Object -First 1 Name, LastWriteTime
