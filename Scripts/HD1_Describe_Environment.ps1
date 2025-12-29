@@ -129,17 +129,22 @@ $netCfg     = Get-NetIPConfiguration
 $dnsServers = Get-DnsClientServerAddress -AddressFamily IPv4
 
 $report.network.ip_configuration = $netCfg | ForEach-Object {
+  $dnsSuffix = $null
+  if ($_.PSObject.Properties.Name -contains "DnsSuffix") {
+    $dnsSuffix = $_.DnsSuffix
+  }
+
   [pscustomobject]@{
     interface_alias = $_.InterfaceAlias
     ipv4_address    = (($_.IPv4Address | ForEach-Object { $_.IPv4Address }) -join ", ")
     ipv4_gateway    = (($_.IPv4DefaultGateway | ForEach-Object { $_.NextHop }) -join ", ")
-    dns_suffix      = $_.DnsSuffix
+    dns_suffix      = $dnsSuffix
   }
 }
 
 $report.network.dns_servers = $dnsServers | ForEach-Object {
   [pscustomobject]@{
-    interface_alias  = $_.InterfaceAlias
+    interfacenamee        = $_.InterfaceAlias
     server_addresses = ($_.ServerAddresses -join ", ")
   }
 }
