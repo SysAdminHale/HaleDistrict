@@ -250,8 +250,11 @@ if (Test-Path -LiteralPath (Join-Path $RepoRootOnDC ".git")) {
 
 # --- Health summary
 $domainDetected = $null
-if ($adOk -and $report.ad.domain -and -not $report.ad.domain.error) {
-  $domainDetected = $report.ad.domain.DNSRoot
+if ($adOk -and $report.ad.domain) {
+  $hasErrorProp = ($report.ad.domain.PSObject.Properties.Name -contains "error")
+  if (-not $hasErrorProp -or -not $report.ad.domain.error) {
+    $domainDetected = $report.ad.domain.DNSRoot
+  }
 }
 
 $report.health_summary = [ordered]@{
